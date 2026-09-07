@@ -6,10 +6,11 @@
 
 const GROQ_BASE = "https://api.groq.com/openai/v1/chat/completions";
 
-// Default text model. Fast + generous free tier.
-const DEFAULT_TEXT_MODEL = "llama-3.3-70b-versatile";
+// Default text model (general-purpose). NOTE: Groq rotates its lineup frequently;
+// these reflect current availability. See panel.js model lists too.
+const DEFAULT_TEXT_MODEL = "openai/gpt-oss-120b";
 // Default vision model (can "see" screenshots/images).
-const DEFAULT_VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
+const DEFAULT_VISION_MODEL = "qwen/qwen3.6-27b";
 
 const SYSTEM_PROMPT =
   "You are 'Arinzaay's Steward', a warm, patient and clear-minded assistant embedded in the user's " +
@@ -156,9 +157,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 // ---------- Settings helpers ----------
+// Valid model IDs (mirrors panel lists). If a stored value isn't here, reset to default.
+const VALID_TEXT = new Set([
+  "openai/gpt-oss-120b",
+  "openai/gpt-oss-20b",
+  "qwen/qwen3.6-27b",
+  "groq/compound",
+]);
+const VALID_VISION = new Set([
+  "qwen/qwen3.6-27b",
+  "qwen/qwen3.8-27b",
+  "openai/gpt-oss-120b",
+]);
+
 async function getSettings() {
   const { settings } = await chrome.storage.local.get(["settings"]);
-  return { ...DEFAULT_SETTINGS, ...(settings || {}) };
+  const cur = { ...DEFAULT_SETTINGS, ...(settings || {}) };
+  // Recover from stale/deprecated stored models (Groq rotates its lineup).
+  if (!VALID_TEXT.has(cur.textModel)) cur.textModel = DEFAULT_TEXT_MODEL;
+  if (!VALID_VISION.has(cur.visionModel)) cur.visionModel = DEFAULT_VISION_MODEL;
+  return cur;
 }
 
 async function saveSettings(partial) {

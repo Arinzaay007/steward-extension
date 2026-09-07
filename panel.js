@@ -199,15 +199,18 @@ function hideSettings() {
   document.body.classList.remove("show-settings");
 }
 
+// Current Groq models (as of 2026). Groq rotates models often, so if one errors,
+// pick another from the list or re-pull from GitHub for updated defaults.
 const TEXT_MODELS = [
-  "llama-3.3-70b-versatile",
-  "meta-llama/llama-4-scout-17b-16e-instruct",
-  "llama-3.1-8b-instant",
   "openai/gpt-oss-120b",
+  "openai/gpt-oss-20b",
+  "qwen/qwen3.6-27b",
+  "groq/compound",
 ];
 const VISION_MODELS = [
-  "meta-llama/llama-4-scout-17b-16e-instruct",
-  "meta-llama/llama-4-maverick-17b-128e-instruct",
+  "qwen/qwen3.6-27b",
+  "qwen/qwen3.8-27b",
+  "openai/gpt-oss-120b",
 ];
 
 function populateSelect(sel, models, current) {
