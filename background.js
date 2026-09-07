@@ -50,6 +50,11 @@ chrome.runtime.onInstalled.addListener(() => {
     title: "Ask Arinzaay's Steward to explain this",
     contexts: ["page", "selection", "image", "link"],
   });
+  // Make the toolbar icon open the side panel natively.
+  // This is the most reliable way to open a side panel from the action button.
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((e) => {
+    console.warn("setPanelBehavior failed:", e);
+  });
 });
 
 // Context menu click -> open the side panel focused on this page.
@@ -82,7 +87,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
     switch (msg?.type) {
       case "GET_SETTINGS": {
-        sendResponse({ settings: (await getSettings()).public });
+        sendResponse({ settings: publicSettings(await getSettings()) });
         break;
       }
       case "SAVE_SETTINGS": {
