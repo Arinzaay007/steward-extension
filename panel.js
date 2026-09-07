@@ -56,6 +56,8 @@ function inline(s) {
 }
 
 function addBubble(kind, text) {
+  // Hide the welcome hero once real conversation starts.
+  if (kind === "user" || kind === "assistant" || kind === "err") hideWelcome();
   const div = document.createElement("div");
   div.className = "bubble " + kind;
   if (kind === "assistant" || kind === "err") {
@@ -66,6 +68,16 @@ function addBubble(kind, text) {
   messagesEl.appendChild(div);
   scrollBottom();
   return div;
+}
+
+const welcomeEl = () => document.getElementById("welcome");
+function showWelcome() {
+  const w = welcomeEl();
+  if (w) w.style.display = "";
+}
+function hideWelcome() {
+  const w = welcomeEl();
+  if (w) w.style.display = "none";
 }
 
 function addSys(text) {
@@ -294,12 +306,14 @@ function initEvents() {
     history = [];
     messagesEl.innerHTML = "";
     addSys("New conversation. Ask me about the page you're on.");
+    showWelcome();
   });
 
   $("#clearHistoryBtn").addEventListener("click", async () => {
     await send({ type: "CLEAR_HISTORY" });
     history = [];
     messagesEl.innerHTML = "";
+    showWelcome();
     setStatus("History cleared.", "neutral");
   });
 

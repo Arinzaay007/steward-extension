@@ -6,22 +6,32 @@
   <title>Arinzaay's Steward</title>
   <style>
     :root {
-      --bg: #f7f8fb;
-      --card: #ffffff;
-      --ink: #1b2430;
-      --muted: #67737f;
-      --line: #e4e8ee;
-      --accent: #3878ff;
-      --accent-ink: #ffffff;
-      --user: #e7efff;
-      --err: #d93025;
+      /* Palette lifted from the Arinzaay's Steward banner art */
+      --bg-deep: #0a1933;      /* deep navy */
+      --bg-2: #0e2144;         /* lighter navy */
+      --bg-glow: #123056;      /* accent glow */
+      --card: #132448;         /* navy card */
+      --card-2: #1a2f5c;
+      --ink: #eaf1ff;          /* near-white text */
+      --muted: #9db4e0;        /* muted blue-grey */
+      --line: rgba(120, 160, 255, 0.18);
+      --accent: #2091f6;       /* electric blue */
+      --accent-2: #1e69f0;
+      --user: #1c3f85;         /* user bubble */
+      --user-ink: #eaf3ff;
+      --err: #ff7a6b;
+      --err-bg: rgba(255, 122, 107, 0.14);
+      --ok: #37d67a;
       --radius: 14px;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
+      background:
+        radial-gradient(1200px 600px at 110% -10%, rgba(32,145,246,0.25), transparent 60%),
+        radial-gradient(900px 500px at -20% 110%, rgba(30,105,240,0.18), transparent 55%),
+        linear-gradient(160deg, var(--bg-deep), var(--bg-2));
       color: var(--ink);
       display: flex;
       flex-direction: column;
@@ -33,29 +43,30 @@
       align-items: center;
       gap: 10px;
       border-bottom: 1px solid var(--line);
-      background: var(--card);
+      background: rgba(10, 25, 51, 0.6);
+      backdrop-filter: blur(6px);
     }
-    header img { width: 26px; height: 26px; border-radius: 7px; }
-    header .name { font-weight: 700; font-size: 15px; }
+    header img { width: 26px; height: 26px; border-radius: 7px; box-shadow: 0 0 0 1px rgba(255,255,255,0.15); }
+    header .name { font-weight: 700; font-size: 14.5px; letter-spacing: 0.2px; }
     header .tag { font-size: 11px; color: var(--muted); }
     .spacer { flex: 1; }
     .icon-btn {
-      border: none; background: none; cursor: pointer; color: var(--muted);
-      font-size: 17px; padding: 4px 6px; border-radius: 8px;
+      border: none; background: transparent; cursor: pointer; color: var(--muted);
+      font-size: 17px; padding: 5px 7px; border-radius: 8px; line-height: 1;
     }
-    .icon-btn:hover { background: #eef1f6; }
+    .icon-btn:hover { background: rgba(255,255,255,0.08); color: var(--ink); }
 
     #context {
       padding: 8px 14px;
       font-size: 11px;
       color: var(--muted);
-      background: #eef3fb;
+      background: rgba(32, 145, 246, 0.08);
       border-bottom: 1px solid var(--line);
       display: flex;
       gap: 6px; align-items: center; flex-wrap: wrap;
       min-height: 30px;
     }
-    #context .dot { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; flex: none; }
+    #context .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: none; box-shadow: 0 0 8px rgba(55,214,122,0.8); }
     #context .dim { opacity: .55; }
 
     #messages {
@@ -65,6 +76,8 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(120,160,255,0.3) transparent;
     }
     .bubble {
       max-width: 88%;
@@ -79,24 +92,43 @@
     .bubble p:last-child { margin-bottom: 0; }
     .bubble ul, .bubble ol { margin: 4px 0 8px; padding-left: 18px; }
     .bubble li { margin: 2px 0; }
-    .bubble strong { font-weight: 600; }
-    .bubble h1, .bubble h2, .bubble h3 { font-size: 14px; margin: 6px 0 4px; }
-    .assistant { background: var(--card); border: 1px solid var(--line); align-self: flex-start; }
-    .user { background: var(--user); align-self: flex-end; }
-    .sys { align-self: center; font-size: 11.5px; color: var(--muted); background: #eceff4; border-radius: 10px; padding: 4px 10px; }
-    .err { background: #fdecea; color: var(--err); border: 1px solid #f5c6c2; align-self: flex-start; }
-    .typing { align-self: flex-start; background: var(--card); border: 1px solid var(--line); padding: 12px 14px; border-radius: var(--radius); color: var(--muted); font-size: 13px; }
-    .typing .spin { display:inline-block; animation: spin 1s linear infinite; }
+    .bubble strong { font-weight: 600; color: #ffffff; }
+    .bubble h1, .bubble h2, .bubble h3 { font-size: 14px; margin: 6px 0 4px; color: #ffffff; }
+    .bubble code { background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 5px; font-size: 12px; }
+    .assistant { background: linear-gradient(180deg, var(--card), var(--card-2)); border: 1px solid var(--line); align-self: flex-start; box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
+    .user { background: linear-gradient(180deg, #2457b5, var(--user)); color: var(--user-ink); align-self: flex-end; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .sys { align-self: center; font-size: 11.5px; color: var(--muted); background: rgba(120,160,255,0.1); border-radius: 10px; padding: 4px 10px; }
+    .err { background: var(--err-bg); color: var(--err); border: 1px solid rgba(255,122,107,0.3); align-self: flex-start; }
+    .typing { align-self: flex-start; background: linear-gradient(180deg, var(--card), var(--card-2)); border: 1px solid var(--line); padding: 12px 14px; border-radius: var(--radius); color: var(--muted); font-size: 13px; }
+    .typing .spin { display:inline-block; animation: spin 1s linear infinite; color: var(--accent); }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Welcome hero when chat is empty */
+    #welcome {
+      margin: auto;
+      text-align: center;
+      padding: 20px 14px;
+      color: var(--ink);
+    }
+    #welcome img.hero {
+      width: 86%;
+      max-width: 340px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+      margin-bottom: 16px;
+    }
+    #welcome h2 { font-size: 17px; margin: 4px 0 6px; font-weight: 700; }
+    #welcome p { font-size: 12.5px; color: var(--muted); margin: 0 auto; max-width: 280px; line-height: 1.5; }
+
     #quickRow {
-      display: flex; gap: 8px; padding: 4px 14px 2px; flex-wrap: wrap;
+      display: flex; gap: 8px; padding: 6px 14px 4px; flex-wrap: wrap;
     }
     .quick {
-      border: 1px solid var(--line); background: var(--card); color: var(--ink);
-      border-radius: 999px; padding: 7px 13px; font-size: 12.5px; cursor: pointer;
+      border: 1px solid var(--line); background: rgba(19,36,72,0.85); color: var(--ink);
+      border-radius: 999px; padding: 7px 13px; font-size: 12px; cursor: pointer; transition: all .15s;
     }
-    .quick:hover { border-color: var(--accent); color: var(--accent); }
+    .quick:hover { border-color: var(--accent); color: #fff; box-shadow: 0 0 0 1px var(--accent); }
 
     #composer {
       display: flex; gap: 8px; padding: 10px 14px 14px; align-items: flex-end;
@@ -104,59 +136,78 @@
     #input {
       flex: 1; resize: none; border: 1px solid var(--line); border-radius: 12px;
       padding: 10px 12px; font: inherit; font-size: 13.5px; line-height: 1.4; max-height: 140px;
-      background: var(--card);
+      background: var(--card); color: var(--ink);
     }
-    #input:focus { outline: none; border-color: var(--accent); }
+    #input::placeholder { color: var(--muted); }
+    #input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(32,145,246,0.25); }
     #send {
-      background: var(--accent); color: var(--accent-ink); border: none; border-radius: 12px;
-      padding: 10px 15px; font-size: 14px; cursor: pointer; flex: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff;
+      border: none; border-radius: 12px; padding: 10px 15px; font-size: 14px; cursor: pointer; flex: none;
+      box-shadow: 0 6px 16px rgba(32,145,246,0.35);
     }
-    #send:disabled { opacity: .5; cursor: default; }
+    #send:disabled { opacity: .5; cursor: default; box-shadow: none; }
 
     .hidden { display: none !important; }
     .muted { color: var(--muted); }
-    .settings label { display: block; font-size: 12px; font-weight: 600; margin: 10px 0 4px; color: var(--muted); }
-    .settings input, .settings select {
-      width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 13px; background: var(--card);
+    .settings label { display: block; font-size: 12px; font-weight: 600; margin: 12px 0 5px; color: var(--muted); }
+    .settings input[type="password"], .settings input[type="text"], .settings select {
+      width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px;
+      font: inherit; font-size: 13px; background: var(--card); color: var(--ink);
     }
-    .check { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 13px; }
-    .settings .row-btns { display: flex; gap: 8px; margin-top: 14px; }
+    .settings input:focus, .settings select:focus { outline: none; border-color: var(--accent); }
+    .check { display: flex; align-items: center; gap: 9px; margin-top: 12px; font-size: 13px; color: var(--ink); }
+    .check input { accent-color: var(--accent); }
+    .settings .row-btns { display: flex; gap: 8px; margin-top: 16px; }
     .btn {
-      flex: 1; padding: 9px; border: none; border-radius: 9px; font-weight: 600; font-size: 13px; cursor: pointer;
+      flex: 1; padding: 10px; border: none; border-radius: 9px; font-weight: 600; font-size: 13px; cursor: pointer;
     }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-ghost { background: #eceff4; color: var(--ink); }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: 0 6px 14px rgba(32,145,246,0.3); }
+    .btn-ghost { background: rgba(120,160,255,0.14); color: var(--ink); border: 1px solid var(--line); }
     .view { flex: 1; display: flex; flex-direction: column; }
     #settingsView { display: none; flex-direction: column; }
     body.show-settings #settingsView { display: flex; }
     body.show-settings #chatView { display: none; }
-    .hint { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+    .hint { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
     .danger { color: var(--err); }
-    #status { font-size: 12px; margin-top: 10px; }
-    .status-ok { color: #1e8e3e; }
+    #status { font-size: 12px; margin-top: 12px; }
+    .status-ok { color: var(--ok); }
     .status-bad { color: var(--err); }
     .status-neutral { color: var(--muted); }
-    footer.credit { text-align: center; font-size: 10.5px; color: #aab3bd; padding: 0 0 6px; }
+    footer.credit { text-align: center; font-size: 10.5px; color: rgba(157,180,224,0.5); padding: 8px 0; }
     a { color: var(--accent); }
+
+    #settingsScroll { padding: 8px 16px 16px; overflow-y: auto; flex: 1; }
+    #settingsIntro { margin-top: 6px; }
+    .settings-card {
+      background: linear-gradient(180deg, var(--card), var(--card-2));
+      border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 12px 14px; margin-top: 12px;
+    }
   </style>
 </head>
 <body class="show-settings">
   <!-- CHAT VIEW -->
   <div class="view" id="chatView">
     <header>
-      <img src="icons/icon48.png" alt="Steward" />
+      <img src="icons/icon48.png" alt="Arinzaay's Steward" />
       <div>
         <div class="name">Arinzaay's Steward</div>
         <div class="tag">Your AI browser guide</div>
       </div>
       <div class="spacer"></div>
-      <button class="icon-btn" id="settingsBtn" title="Settings">⚙</button>
       <button class="icon-btn" id="newChatBtn" title="New chat">＋</button>
+      <button class="icon-btn" id="settingsBtn" title="Settings">⚙</button>
     </header>
 
     <div id="context"><span class="dot"></span><span id="ctxText">Ready — I'll explain whatever you're looking at.</span></div>
 
-    <div id="messages"></div>
+    <div id="messages">
+      <div id="welcome">
+        <img class="hero" src="panel-banner.png" alt="Arinzaay's Steward" />
+        <h2>Your AI browser guide 🧭</h2>
+        <p>I read the sites &amp; pictures you're looking at and explain them in plain language. Ask me anything, or tap a quick question below.</p>
+      </div>
+    </div>
 
     <div id="quickRow">
       <button class="quick" data-q="Explain this page in simple terms.">Explain this page</button>
@@ -166,7 +217,7 @@
     </div>
 
     <div id="composer">
-      <textarea id="input" rows="1" placeholder="Ask Arinzaay's Steward about this page or a picture…"></textarea>
+      <textarea id="input" rows="1" placeholder="Ask about this page or a picture…"></textarea>
       <button id="send">Send</button>
     </div>
   </div>
@@ -180,37 +231,40 @@
         <div class="tag">Connect your Groq key</div>
       </div>
     </header>
-    <div style="padding: 14px; overflow-y:auto;">
-      <p class="muted" style="font-size:12.5px; margin-top:0;">
-        Arinzaay's Steward talks to the AI through Groq (fast &amp; OpenAI-compatible). Grab a
-        <b>free</b> API key at
-        <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> —
-        no credit card needed.
-      </p>
-
-      <label>Groq API Key</label>
-      <input type="password" id="apiKey" placeholder="gsk_…" autocomplete="off" />
-      <div class="hint">Stored only in your browser's local extension storage.</div>
-
-      <label>Text model</label>
-      <select id="textModel"></select>
-      <div class="hint">Used for page text questions (fast &amp; free).</div>
-
-      <label>Vision model</label>
-      <select id="visionModel"></select>
-      <div class="hint">Can "see" screenshots &amp; images of the page.</div>
-
-      <div class="check"><input type="checkbox" id="includeScreenshot" checked /> <span>Send a screenshot of the page when I ask</span></div>
-      <div class="check"><input type="checkbox" id="includePageText" checked /> <span>Read the page's text when I ask</span></div>
-
-      <div class="row-btns">
-        <button class="btn btn-ghost" id="testBtn">Test connection</button>
-        <button class="btn btn-primary" id="saveBtn">Save</button>
+    <div id="settingsScroll">
+      <div class="settings-card" id="settingsIntro">
+        <p style="font-size:12.5px; color:var(--ink); margin:0 0 2px;"><b>Step 1 — free key</b></p>
+        <p class="muted" style="font-size:12px; margin:0;">
+          Grab a <b>free</b> Groq API key at
+          <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> — no credit card.
+        </p>
+        <label>Groq API Key</label>
+        <input type="password" id="apiKey" placeholder="gsk_…" autocomplete="off" />
+        <div class="hint">Stored only in your browser's local extension storage. Never leaves your device except to Groq when you ask.</div>
       </div>
-      <div id="status" class="status-neutral"></div>
 
-      <button class="icon-btn" id="clearHistoryBtn" title="Clear chat history" style="margin-top:16px;">🗑 Clear chat history</button>
-      <div class="hint">All data stays on your device. Nothing is sent until you ask Arinzaay's Steward something.</div>
+      <div class="settings-card">
+        <label>Text model <span class="muted">(page text questions)</span></label>
+        <select id="textModel"></select>
+
+        <label>Vision model <span class="muted">("sees" screenshots &amp; images)</span></label>
+        <select id="visionModel"></select>
+      </div>
+
+      <div class="settings-card">
+        <div class="check"><input type="checkbox" id="includeScreenshot" checked /> <span>Send a screenshot of the page when I ask</span></div>
+        <div class="check"><input type="checkbox" id="includePageText" checked /> <span>Read the page's text when I ask</span></div>
+      </div>
+
+      <div class="settings-card">
+        <div class="row-btns">
+          <button class="btn btn-ghost" id="testBtn">Test connection</button>
+          <button class="btn btn-primary" id="saveBtn">Save</button>
+        </div>
+        <div id="status" class="status-neutral"></div>
+        <button class="icon-btn" id="clearHistoryBtn" title="Clear chat history" style="margin-top:16px; color:var(--muted);">🗑 Clear chat history</button>
+        <div class="hint">All data stays on your device. Nothing is sent until you ask Arinzaay's Steward something.</div>
+      </div>
     </div>
     <footer class="credit">Arinzaay's Steward v1.0</footer>
   </div>
