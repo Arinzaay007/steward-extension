@@ -1,0 +1,19 @@
+# --- NEVER commit secrets ---
+# If you ever store an API key in a file, keep it here & out of git.
+.env
+*.key
+.env.local
+.env.*.local
+secrets*
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+*.log
+
+# --- packaging ---
+*.zip
+/node_modules/
