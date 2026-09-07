@@ -122,6 +122,21 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: true });
         break;
       }
+      case "TEST_CONNECTION": {
+        // Ping Groq with the STORED key to verify it works.
+        const settings2 = await getSettings();
+        if (!settings2.apiKey) {
+          sendResponse({ ok: false, error: "no_api_key" });
+          break;
+        }
+        const testReply = await askSteward({
+          userText: "Reply with exactly: OK",
+          capture: {},
+          history: [],
+        });
+        sendResponse(testReply);
+        break;
+      }
       case "APPEND_HISTORY": {
         const h = await chrome.storage.local.get(["history"]);
         const list = h.history || [];
@@ -153,7 +168,8 @@ async function saveSettings(partial) {
 }
 
 function publicSettings(s) {
-  return { ...s, apiKey: "" }; // never expose the key back to the panel UI
+  // Never send the actual key back to the UI, but DO tell it whether one is saved.
+  return { ...s, apiKey: "", hasApiKey: !!(s.apiKey && s.apiKey.trim()) };
 }
 
 // ---------- Page capture ----------

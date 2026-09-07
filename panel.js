@@ -112,7 +112,7 @@ async function updateContext() {
 
 async function ask(userText) {
   if (pendingTurn) return;
-  if (!settings.apiKey) {
+  if (!settings.hasApiKey) {
     addSys("Please add your free Groq API key in Settings first.");
     showSettings();
     return;
@@ -234,23 +234,26 @@ async function loadSettings() {
 }
 
 async function saveSettings() {
+  const keyEntered = $("#apiKey").value.trim();
+  // Only include the key if the user typed one (so we never wipe a saved key).
   const partial = {
-    apiKey: $("#apiKey").value.trim(),
     textModel: $("#textModel").value,
     visionModel: $("#visionModel").value,
     includeScreenshot: $("#includeScreenshot").checked,
     includePageText: $("#includePageText").checked,
   };
-  if (partial.apiKey) {
-    await send({ type: "SAVE_SETTINGS", settings: partial });
-    setStatus("Saved ✓  API key set.", "ok");
-    loadSettings();
-    // key field: hide entered key after save
-    $("#apiKey").value = "";
-    setTimeout(() => hideSettings(), 700);
-  } else {
-    setStatus("Enter your API key before saving.", "bad");
+  if (keyEntered) partial.apiKey = keyEntered;
+
+  if (!keyEntered && !settings.hasApiKey) {
+    setStatus("Enter your Groq API key first.", "bad");
+    return;
   }
+
+  await send({ type: "SAVE_SETTINGS", settings: partial });
+  setStatus("Saved ✓", "ok");
+  await loadSettings();
+  $("#apiKey").value = "";
+  setTimeout(() => hideSettings(), 700);
 }
 
 function setStatus(text, cls) {
@@ -260,13 +263,19 @@ function setStatus(text, cls) {
 }
 
 async function testConnection() {
-  const key = $("#apiKey").value.trim() || settings.apiKey;
-  if (!key) { setStatus("Enter a key first.", "bad"); return; }
+  const key = $("#apiKey").value.trim();
+  if (!key && !settings.hasApiKey) {
+    setStatus("Enter a key first.", "bad");
+    return;
+  }
   setStatus("Testing…", "neutral");
-  // save key temporarily to test
-  await send({ type: "SAVE_SETTINGS", settings: { apiKey: key } });
-  const reply = await send({ type: "ASK_STEWARD", userText: "Say just: OK", capture: {}, history: [] });
-  await send({ type: "SAVE_SETTINGS", settings: { apiKey: settings.apiKey || "" } }); // restore (empty if was none)
+  // If the user typed a key, save it so the background can test with it.
+  if (key) {
+    await send({ type: "SAVE_SETTINGS", settings: { apiKey: key } });
+    $("#apiKey").value = "";
+    await loadSettings();
+  }
+  const reply = await send({ type: "TEST_CONNECTION" });
   if (reply && reply.ok) setStatus("Connection works ✓  (" + (reply.model || "") + ")", "ok");
   else handleError(reply);
 }
@@ -309,7 +318,7 @@ function initEvents() {
 
   // Auto-open settings if no key yet.
   send({ type: "GET_SETTINGS" }).then((res) => {
-    if (res && res.settings && !res.settings.apiKey) {
+    if (res && res.settings && !res.settings.hasApiKey) {
       addSys("Welcome! Add your free Groq API key to get started.");
       showSettings();
     } else {
@@ -327,7 +336,7 @@ function initEvents() {
 // ---------- Boot ----------
 (async function init() {
   await loadSettings();
-  if (!settings.apiKey) {
+  if (!settings.hasApiKey) {
     $("#apiKey").focus();
   }
   initEvents();
