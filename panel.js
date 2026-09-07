@@ -79,7 +79,7 @@ function addSys(text) {
 function addTyping() {
   const div = document.createElement("div");
   div.className = "typing";
-  div.innerHTML = '<span class="spin">◌</span> Arinzaay's Steward is looking…';
+  div.innerHTML = "<span class=\"spin\">◌</span> Arinzaay's Steward is looking…";
   messagesEl.appendChild(div);
   scrollBottom();
   return div;
