@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Steward - Your AI Browser Guide",
+  "name": "Arinzaay's Steward",
   "version": "1.0.0",
   "description": "A gentle AI steward that reads the sites and pictures you're looking at and explains them in plain language. Ask whenever you like.",
   "permissions": [
@@ -18,7 +18,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Open Steward",
+    "default_title": "Open Arinzaay's Steward",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -39,7 +39,7 @@
         "default": "Ctrl+Shift+S",
         "mac": "Command+Shift+S"
       },
-      "description": "Open the Steward side panel"
+      "description": "Open the Arinzaay's Steward side panel"
     }
   }
 }

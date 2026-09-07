@@ -1,4 +1,4 @@
-# 🧭 Steward — Your AI Browser Guide
+# 🧭 Arinzaay's Steward — Your AI Browser Guide
 
 A Chrome extension that acts as a gentle, personal **steward** while you browse. It
 **reads the sites and pictures you're looking at** and explains them in plain language —
@@ -10,11 +10,11 @@ quick question or type something. Your Groq API key stays in your browser's loca
 ---
 
 ## ✨ Features
-- **Side panel chat** — ask Steward anything about the current page.
+- **Side panel chat** — ask Arinzaay's Steward anything about the current page.
 - **Quick questions** — one-click *"Explain this page"*, *"What can I do here?"*, *"Any red flags?"*, *"Summarize"*.
-- **Reads pages & pictures** — Steward grabs the page's readable text *and* a screenshot so it can
+- **Reads pages & pictures** — Arinzaay's Steward grabs the page's readable text *and* a screenshot so it can
   actually "see" what you're looking at (uses a **vision** model for images).
-- **Context menu** — right-click any page/selection/image → *"Ask Steward to explain this."*
+- **Context menu** — right-click any page/selection/image → *"Ask Arinzaay's Steward to explain this."*
 - **Keyboard shortcut** — `Ctrl/Cmd + Shift + S`.
 - **On-demand only** — no auto-triggering, no page scanning until you ask.
 - **Settings** — paste your free Groq key, pick text/vision models, toggle screenshot & text capture.
@@ -49,18 +49,18 @@ quick question or type something. Your Groq API key stays in your browser's loca
 ```
 
 **In plain steps:**
-1. You open a page and ask Steward (type or tap a quick question).
-2. Steward reads the page's readable text and captures a screenshot of what you see.
+1. You open a page and ask Arinzaay's Steward (type or tap a quick question).
+2. Arinzaay's Steward reads the page's readable text and captures a screenshot of what you see.
 3. It sends that context **plus** your question to Groq.
-4. Groq's model answers; Steward replies in plain, skimmable language.
+4. Groq's model answers; Arinzaay's Steward replies in plain, skimmable language.
 
-> Text questions use a fast **text model**; when a screenshot/image is present, Steward
+> Text questions use a fast **text model**; when a screenshot/image is present, Arinzaay's Steward
 > automatically switches to a **vision model** that can actually see it.
 
 ---
 
 ## 🔧 The AI: Groq
-Steward calls **Groq** — OpenAI-compatible, with a **free tier and no credit card**:
+Arinzaay's Steward calls **Groq** — OpenAI-compatible, with a **free tier and no credit card**:
 - Base URL: `https://api.groq.com/openai/v1/chat/completions`
 - **Text model** (default): `llama-3.3-70b-versatile`
 - **Vision model** (default): `meta-llama/llama-4-scout-17b-16e-instruct`
@@ -77,15 +77,15 @@ Get a free key: **https://console.groq.com/keys**
 3. Open Chrome and go to **`chrome://extensions/`**.
 4. Toggle **Developer mode** ON (top-right corner).
 5. Click **Load unpacked** and select the **`steward-extension`** folder.
-6. Steward's icon appears in your toolbar — click the puzzle-piece (Extensions) icon and **pin 📌** it.
+6. Arinzaay's Steward's icon appears in your toolbar — click the puzzle-piece (Extensions) icon and **pin 📌** it.
 
 ### 2. Connect your key
-1. Click the **Steward** icon (or press `Ctrl/Cmd + Shift + S`) to open the side panel.
+1. Click the **Arinzaay's Steward** icon (or press `Ctrl/Cmd + Shift + S`) to open the side panel.
 2. It opens **Settings** the first time — paste your free Groq key from console.groq.com/keys.
 3. Click **Test connection** → then **Save**.
 
 ### 3. Grant page access (first use on a site)
-The first time you ask on a new site, Chrome asks permission for Steward to *"read and change all
+The first time you ask on a new site, Chrome asks permission for Arinzaay's Steward to *"read and change all
 your data on the websites you visit"* — this is required to read page text and capture the screen.
 Click **Allow**.
 
@@ -96,7 +96,7 @@ Open any page, then type a question or tap a quick button:
 - **Any red flags?** — paywalls, sign-up tricks, misleading claims, tracking
 - **Summarize** — the key points
 
-You can also **right-click** any page/selection/image → *Ask Steward to explain this.*
+You can also **right-click** any page/selection/image → *Ask Arinzaay's Steward to explain this.*
 
 ---
 

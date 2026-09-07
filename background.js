@@ -12,7 +12,7 @@ const DEFAULT_TEXT_MODEL = "llama-3.3-70b-versatile";
 const DEFAULT_VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
 
 const SYSTEM_PROMPT =
-  "You are 'Steward', a warm, patient and clear-minded assistant embedded in the user's " +
+  "You are 'Arinzaay's Steward', a warm, patient and clear-minded assistant embedded in the user's " +
   "browser. You act like a knowledgeable friend who looks at whatever web page or image the " +
   "user is currently viewing and explains it in plain language. " +
   "Guidelines:\n" +
@@ -47,7 +47,7 @@ chrome.runtime.onInstalled.addListener(() => {
   // Set up context menu item.
   chrome.contextMenus.create({
     id: "steward-explain",
-    title: "Ask Steward to explain this",
+    title: "Ask Arinzaay's Steward to explain this",
     contexts: ["page", "selection", "image", "link"],
   });
 });
